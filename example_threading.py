@@ -11,7 +11,7 @@ def foo(number: int):
     # acquire lock control
     lock.acquire()
     # logic
-    for i in ragne(number): print(i)
+    for i in range(number): print(i)
     print('finished foo() logic')
     # release lock control
     lock.release()
@@ -19,12 +19,12 @@ def foo(number: int):
 """
 regular 
 """
-threading.Thread(target=foo, args=10)
+sample_thread = threading.Thread(target=foo, args=10)
 # run threading
-threading.start()
+sample_thread.start()
 # wait thread until end
 # 主要針對某些需要等待 thread 跑完才能執行的邏輯
-threading.join()
+sample_thread.join()
 # after thread finished, continous run later logic
 print('Done.')
 
@@ -35,7 +35,7 @@ multi threading
 threads = []
 for i in range(5):
     threads.append(threading.Thread(target=foo, args=10))
-    threads.start()
+    threads[i].start()
 
 for i in range(5):
     threads[i].join()
@@ -54,12 +54,13 @@ class Worker(threading.Thread):
 
     def run(self):
         print(f"Worker # {self.tag} is running.")
-        foo()
+        foo(self.tag)
         time.sleep(1)
 
-worker = Worker()
-worker.start()
-worker.join()
+for i in range(3):
+    worker = Worker(i)
+    worker.start()
+    worker.join()
 
 # after thread finished, continous run later logic
 print('Done.')
