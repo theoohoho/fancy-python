@@ -1,4 +1,5 @@
-"""Threading practice
+"""
+Threading practice
 """
 import threading
 import time
@@ -9,12 +10,15 @@ def foo(number: int):
     # 針對 multi thread，每個 thread 在同時進行時，如果針對某些不能同時操作的事情時 e.g database寫入、寫入同一個檔案
     # 則需要加入 lock來確保每次只有一個 thread 在操作，而不是多個 thread同時操作
     lock = threading.Lock()
+
     # acquire lock control
     lock.acquire()
+
     # logic
     for i in range(number):
         print(i)
     print("finished foo() logic")
+
     # release lock control
     lock.release()
 
@@ -48,10 +52,20 @@ print("Done.")
 
 
 """
+threading pool
+"""
+import current.futures as cf
+
+with cf.ThreadPoolExecutor(max_workers=2) as executor:
+  func_map = {executor.submit(foo(i)): i for i in range(1, 4)}
+  for future in cf.as_completed(func_map):
+    print(future.result())
+    
+
+
+"""
 defined custom Thread class
 """
-
-
 class Worker(threading.Thread):
     def __init__(self, tag: int):
         threading.Thread.__init__(self)
